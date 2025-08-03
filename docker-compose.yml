@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  oracle: 
+    image: ghcr.io/gvenzl/oracle-xe:11-slim
+    container_name: dreamhome_db
+    restart: unless-stopped
+    ports:
+      - "1521:1532"
+      - "5500:5500"
+    environment:
+      ORACLE_PASSWORD: "admin"
+      APP_USER: "admin"
+      APP_USER_PASSWORD: "admin"
+    volumes:
+      - oracle-data:/opt/oracle/oracledata
+      - ./db/init:/opt/oracle/oracledata/db-init:ro
+
+  api:
+    build:
+      context: ./api 
+      dockerfile: Dockerfile 
+    container_name: dreamhome_api 
+    depends_on:
+      - oracle 
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./api:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload 
+
+  ui:
+    build:
+      context: ./ui 
+      dockerfile: Dockerfile 
+    container_name: dreamhome_ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./ui:/app 
+    command: npm run dev
+
+volumes:
+  oracle-data:
+    driver: local 
+
