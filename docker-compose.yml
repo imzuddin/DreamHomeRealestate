@@ -21,28 +21,27 @@ services:
       context: ./api 
       dockerfile: Dockerfile 
     container_name: dreamhome_api 
-    depends_on:
-      - oracle 
+    # depends_on:
+      # - oracle 
     ports:
       - "8000:8000"
     env_file:
       - ./api/.env
     volumes:
-      - ./api:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload 
+      - ./api/code:/code
 
-  ui:
-    build:
-      context: ./ui 
-      dockerfile: Dockerfile 
-    container_name: dreamhome_ui
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
-    volumes:
-      - ./ui:/app 
-    command: npm run dev
+  # ui:
+  #   build:
+  #     context: ./ui 
+  #     dockerfile: Dockerfile 
+  #   container_name: dreamhome_ui
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - api
+  #   volumes:
+  #     - ./ui:/app 
+  #   command: npm run dev
 
 volumes:
   oracle-data:
