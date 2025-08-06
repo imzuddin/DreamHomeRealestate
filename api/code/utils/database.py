@@ -1,19 +1,25 @@
 import os 
 import oracledb 
+import subprocess
 from dotenv import load_dotenv
 from contextlib import contextmanager
+import re 
 
 load_dotenv()
 
 ORACLE_USER = os.getenv("ORACLE_USER", "admin")
 ORACLE_PASSWORD = os.getenv("ORACLE_PASSWORD", "admin")
-ORACLE_DSN = os.getenv("ORACLE_DSN", "oracle:1521/XE")
+ORACLE_HOST = "localhost"
+ORACLE_PORT = "1521"
+ORACLE_SERVICE = "FREEPDB1"
+ORACLE_DSN = oracledb.makedsn(ORACLE_HOST, ORACLE_PORT, service_name=ORACLE_SERVICE)
 
 class DataBaseManager: 
-    def __init__(self, username: str = ORACLE_USER, password: str = ORACLE_PASSWORD, oracle_dsn: str = ORACLE_DSN):
+    def __init__(self, logger, username: str = ORACLE_USER, password: str = ORACLE_PASSWORD, oracle_dsn: str = ORACLE_DSN, ):
         self.username = username
         self.password = password
         self.dsn = oracle_dsn
+        self.logger = logger
 
     @contextmanager
     def get_connection(self):
@@ -23,15 +29,13 @@ class DataBaseManager:
                 user=self.username,
                 password=self.password,
                 dsn=self.dsn,
-                encoding="UTF-8",
-                timeout = 10 
             )
             yield conn 
 
-        except Exception:
+        except ConnectionError as e:
             if conn:
                 conn.rollback()
-            raise
+            raise e
         finally:
             if conn:
                 conn.close()
@@ -49,5 +53,3 @@ class DataBaseManager:
         with self.cursor() as (cur, conn):
             cur.callproc(procedure_name, args)
             conn.commit()
-
-        
