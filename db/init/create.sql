@@ -225,8 +225,8 @@ INSERT INTO DH_REGISTRATION  values ('CR62','B004', 'SG37',to_date('2005-11-22',
 INSERT INTO DH_REGISTRATION  values ('CR90','B004', 'SL21',to_date('2005-12-22','yyyy-mm-dd') );
 
 
- INSERT INTO DH_LEASE values ( 1,'CR55','PG16',550,to_date('2005-12-22','yyyy-mm-dd'), to_date('2007-12-22','yyyy-mm-dd') );
- INSERT INTO DH_LEASE values ( 2,'CR62','PG21',580,to_date('2006-11-22','yyyy-mm-dd'), to_date('2007-10-22','yyyy-mm-dd') );
- INSERT INTO DH_LEASE values ( 3,'CR90','PG36',620,to_date('2003-10-22','yyyy-mm-dd'), to_date('2007-11-22','yyyy-mm-dd') );
- INSERT INTO DH_LEASE values ( 4,'CR64','PG36',800,to_date('2002-12-22','yyyy-mm-dd'), to_date('2005-09-22','yyyy-mm-dd') );
- INSERT INTO DH_LEASE values ( 5,'CR83','PL94',7500,to_date('2008-08-22','yyyy-mm-dd'), to_date('2009-12-22','yyyy-mm-dd') );
+INSERT INTO DH_LEASE values ( 1,'CR55','PG16',550,to_date('2005-12-22','yyyy-mm-dd'), to_date('2007-12-22','yyyy-mm-dd') );
+INSERT INTO DH_LEASE values ( 2,'CR62','PG21',580,to_date('2006-11-22','yyyy-mm-dd'), to_date('2007-10-22','yyyy-mm-dd') );
+INSERT INTO DH_LEASE values ( 3,'CR90','PG36',620,to_date('2003-10-22','yyyy-mm-dd'), to_date('2007-11-22','yyyy-mm-dd') );
+INSERT INTO DH_LEASE values ( 4,'CR64','PG36',800,to_date('2002-12-22','yyyy-mm-dd'), to_date('2005-09-22','yyyy-mm-dd') );
+INSERT INTO DH_LEASE values ( 5,'CR83','PL94',7500,to_date('2008-08-22','yyyy-mm-dd'), to_date('2009-12-22','yyyy-mm-dd') );

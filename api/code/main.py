@@ -2,14 +2,20 @@ import os
 from fastapi import FastAPI, Request, HTTPException 
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware 
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
+import logging
 
 load_dotenv()
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+)
 
 app = FastAPI(
     title="Dream Home Realestate API",
     version=os.getenv("VERSION", "0.1.0")
 )
+logger = logging.getLogger("api.main")
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +24,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info(f"✅ API Started")
 
 @app.get("/health_endpoint", tags=["health"])
 def healthcheck():

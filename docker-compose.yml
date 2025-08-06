@@ -2,33 +2,35 @@ version: "3.8"
 
 services:
   oracle: 
-    image: ghcr.io/gvenzl/oracle-xe:11-slim
+    image: ghcr.io/gvenzl/oracle-free:23.7-slim-faststart
     container_name: dreamhome_db
     restart: unless-stopped
     ports:
-      - "1521:1532"
-      - "5500:5500"
+      - "1521:1521"
     environment:
       ORACLE_PASSWORD: "admin"
       APP_USER: "admin"
       APP_USER_PASSWORD: "admin"
     volumes:
-      - oracle-data:/opt/oracle/oracledata
-      - ./db/init:/opt/oracle/oracledata/db-init:ro
-
+      - oracle_data:/opt/oracle/oradata
   api:
     build:
       context: ./api 
       dockerfile: Dockerfile 
     container_name: dreamhome_api 
-    # depends_on:
-      # - oracle 
+    network_mode: host
+    depends_on:
+      - oracle 
     ports:
       - "8000:8000"
+    environment:
+      - PYTHONPATH=/code
     env_file:
       - ./api/.env
     volumes:
       - ./api/code:/code
+      - ./api/run.sh:/run.sh 
+    command: ["/run.sh"]
 
   # ui:
   #   build:
@@ -44,6 +46,6 @@ services:
   #   command: npm run dev
 
 volumes:
-  oracle-data:
-    driver: local 
+  oracle_data:
+
 
