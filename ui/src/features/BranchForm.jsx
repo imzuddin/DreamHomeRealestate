@@ -30,9 +30,9 @@ export default function BranchForm({ open, onClose }) {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle> Hire New Staff </DialogTitle>
+            <DialogTitle> Add New Branch </DialogTitle>
             <DialogContent>
-                <form id="hire-staff-form" onSubmit={handleSubmit(onSubmit)}>
+                <form id="edit-branch-form" onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                     {[
                     ["branchno", "Branch ID"],
@@ -63,7 +63,7 @@ export default function BranchForm({ open, onClose }) {
                 <Button onClick={onClose} disabled={isLoading}>
                     Cancel
                 </Button>
-                <Button type="submit" form="hire-staff-form" variant="contained" disabled={isLoading}>
+                <Button type="submit" form="edit-branch-form" variant="contained" disabled={isLoading}>
                     {isLoading ? "Saving" : "Save"}
                 </Button>
             </DialogActions>

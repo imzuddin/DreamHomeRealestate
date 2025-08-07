@@ -7,6 +7,8 @@ apt-get install -y -qq netcat-traditional
 HOST="localhost"
 PORT="1521"
 
+pip install -r "requirements.txt"
+
 echo "⏳ Waiting for Oracle listener on ${HOST}:${PORT}…"
 sleep 10
 

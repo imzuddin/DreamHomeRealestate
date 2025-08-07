@@ -29,6 +29,7 @@ services:
       - ./api/.env
     volumes:
       - ./api/code:/code
+      - ./api/requirements.txt:/code/requirements.txt
       - ./api/run.sh:/run.sh 
     command: ["/run.sh"]
 

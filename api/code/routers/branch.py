@@ -49,7 +49,7 @@ async def update_branch(branchno: str, payload: BranchUpdate):
 @router.get("/{branchno}/address")
 async def get_branch_address(branchno: str):
     with db_manager.cursor() as (cur, conn):
-        address: str = cur.callfunc("get_branch_address", STRING, [branchno])
+        address: str = cur.callfunc("get_branch_address", str, [branchno])
     if address == "Branch Not Found":
         raise HTTPException(status_code=404, detail="Branch Not Found")
     return {"address": address}

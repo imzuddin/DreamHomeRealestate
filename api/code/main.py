@@ -2,7 +2,8 @@ import os
 from fastapi import FastAPI, Request, HTTPException 
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware 
-from routers import branch, client, staff
+from routers import branch, client, staff, login
+from utils.database import DataBaseManager
 from dotenv import load_dotenv
 import logging
 
@@ -17,6 +18,7 @@ app = FastAPI(
     version=os.getenv("VERSION", "0.1.0")
 )
 logger = logging.getLogger("api.main")
+db_manager = DataBaseManager(logger)
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,9 +31,12 @@ app.add_middleware(
 app.include_router(branch.router)
 app.include_router(client.router)
 app.include_router(staff.router)
+app.include_router(login.router)
 
 @app.on_event("startup")
 async def startup_event():
+    db_manager.init_users_table()
+
     logger.info(f"✅ API Started")
 
 @app.get("/health_endpoint", tags=["health"])
