@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI, Request, HTTPException 
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware 
+from routers import branch, client, staff
 from dotenv import load_dotenv
 import logging
 
@@ -24,6 +25,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(branch.router)
+app.include_router(client.router)
+app.include_router(staff.router)
 
 @app.on_event("startup")
 async def startup_event():
