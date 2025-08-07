@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Box, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Paper, Table, TableBody, IconButton, TableCell, TableHead, TableRow, Typography, Card, CardContent, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useGetStaffQuery } from "../features/api/apiSlice";
 import EditStaffModal from "../features/EditStaffModal";
 import StaffForm from "../features/StaffForm";
+import Construction from "@mui/icons-material/Construction"
 
 export default function StaffPage() {
     const { data: staffList = [], isLoading, isError} = useGetStaffQuery();
-    const navigate = useNavigate();
 
     const [ selectedStaff, setSelectedStaff ] = useState(null);
     const [ modalOpen, setModalOpen ] = useState(false); 
@@ -19,25 +19,24 @@ export default function StaffPage() {
     }
 
     return (
-        <Box>
+        <Container maxWidth="xl" sx={{ py: 4 }}>
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 2 }}>
-                <Typography variant="h4" sx={{ flexGrow: 1 }}>
-                    Staff Directory
-                </Typography>
-                <Button
-                    variant="contained"
-                    onClick={() => setHireOpen(true)}
-                >
-                    Hire New Staff
-                </Button>
+                <Card fullWidth sx={{ marginBottom: "10px", width: "100%"}}>
+                    <CardContent fullWidth>
+                        <Typography variant="h4" sx={{ flexGrow: 1 }}>
+                            Staff Directory
+                        </Typography>
+                    </CardContent>
+                </Card>
+
 
                 {isLoading ? (
                     <Typography> Loading... </Typography>
                 ) : isError ? (
                     <Typography color="error"> Error Loading Staff </Typography>
                 ) : (
-                    <Paper>
-                        <Table>
+                    <Paper sx={{ width: "100%", mb: 3 }}>
+                        <Table >
                             <TableHead>
                                 <TableRow>
                                     {[
@@ -52,6 +51,7 @@ export default function StaffPage() {
                                         "Telephone",
                                         "Mobile",
                                         "Email",
+                                        "",
                                     ].map((col) => (
                                         <TableCell key={col}>{col}</TableCell>
                                     ))}
@@ -71,10 +71,23 @@ export default function StaffPage() {
                                         <TableCell>{values.telephone}</TableCell>
                                         <TableCell>{values.mobile}</TableCell>
                                         <TableCell>{values.email}</TableCell>
+                                        <TableCell> 
+                                            <IconButton
+                                                onClick={() => handleRowClick(values)}
+                                                size="large"
+                                            >
+                                                <Construction/>
+                                            </IconButton>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
+                        <Box sx={{ padding: 2}}>
+                            <Button variant="contained" fullWidth onClick={() => setHireOpen(true)}>
+                                Hire New Staff
+                            </Button>
+                        </Box>
                     </Paper>
                 )}
 
@@ -83,6 +96,6 @@ export default function StaffPage() {
                 )}
                 <StaffForm open={hireOpen} onClose={() => setHireOpen(false)} />
             </Box>
-        </Box>
+        </Container>
     )
 }

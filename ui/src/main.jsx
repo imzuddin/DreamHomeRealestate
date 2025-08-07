@@ -6,9 +6,13 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import App from "./App";
 import { store } from './app/store'
 import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const theme = createTheme({
-    palette: { mode: 'dark'}
+    palette: { mode: 'light'},
+    typography: {
+        fontFamily: "'Inter', sans-serif",
+    },
 })
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -17,7 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <BrowserRouter>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
-                    <App />
+                    <AuthProvider>
+                        <App />
+                    </AuthProvider>
                 </ThemeProvider>
             </BrowserRouter>
         </Provider>

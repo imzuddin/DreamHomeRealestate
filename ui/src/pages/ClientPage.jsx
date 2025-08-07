@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Container, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useGetClientsQuery, useDeleteClientMutation } from "../features/api/apiSlice";
 import ConfirmDialog from "../features/ConfirmationModal";
@@ -23,22 +23,21 @@ export default function ClientsPage() {
         deleteClient(clientNo)
     }
     return (
-        <Box>
-            <Box sx={{ display: "flex", flexDirection:"column", alignItems: "center", mb: 2 }}>
-                <Typography variant="h4" sx={{ flexGrow: 1}}>
-                    Client Directory
-                </Typography>
-                <Button variant="contained" onClick={() => setModalOpen(true)}>
-                    Add Client
-                </Button>
-            </Box>
+        <Container maxWidth="xl" sx={{ py: 4 }}>
+            <Card fullWidth sx={{ marginBottom: "10px", width: "100%"}}>
+                <CardContent fullWidth>
+                    <Typography variant="h4" sx={{ flexGrow: 1 }}>
+                        Clients Directory
+                    </Typography>
+                </CardContent>
+            </Card>
 
             {isLoading ? (
                 <Typography> Loading ... </Typography>
             ) : isError ? (
                 <Typography> Error Loading Clients </Typography>
             ) : (
-                <Paper>
+                <Paper sx={{ width: "100%", mb: 3 }}>
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -82,11 +81,16 @@ export default function ClientsPage() {
                             ))}
                         </TableBody>
                     </Table>
+                    <Box sx={{ padding: 2}}>
+                        <Button variant="contained" fullWidth onClick={() => setModalOpen(true)}>
+                            Add New Client
+                        </Button>
+                    </Box>
                 </Paper>
             )}
 
             <ClientForm open={modalOpen} onClose={()=> setModalOpen(false)}/>
             <ConfirmDialog open={confirmationOpen} message="Are You Sure You Want To Delete This Client?" onClose={() => setConfirmationOpen(false)} onConfirm={() => handleDelete(deleteID)} />
-        </Box>
+        </Container>
     )
 }

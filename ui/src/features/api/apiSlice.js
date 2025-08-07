@@ -79,6 +79,13 @@ export const api = createApi({
             query: (branchno) => `/branches/${branchno}/address`,
             providesTags: (result, error, branchno) => [{ type: 'Branches', id: branchno }],
         }),
+        login: builder.mutation({
+            query: ({ username, password }) => ({
+                url: "/login/login",
+                method: "POST",
+                body: { username, password },
+        }),
+    }),
     }),
 });
 
@@ -94,4 +101,5 @@ export const {
     useCreateBranchMutation,
     useUpdateBranchMutation,
     useGetBranchAddressQuery,
+    useLoginMutation,
 } = api;

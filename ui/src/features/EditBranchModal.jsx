@@ -38,11 +38,11 @@ export default function EditBranchModal({ open, onClose, branch }) {
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth sx={{ borderRadius: "100px"}}>
             <DialogTitle> 
                 Edit Branch Information
             </DialogTitle>
-            <DialogContent>
+            <DialogContent sx={{ padding: "10px"}}>
                 <form id="edit-staff-form" onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                         {[
