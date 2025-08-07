@@ -145,7 +145,19 @@ CREATE OR REPLACE PROCEDURE delete_client_sp(
 ) 
 IS 
 BEGIN 
-  DELETE FROM DH_CLIENT WHERE Clientno = p_clientno;
+  DELETE FROM DH_VIEWING WHERE clientno = p_clientno;
+  DELETE FROM DH_REGISTRATION WHERE clientno = p_clientno;
+  DELETE FROM DH_LEASE WHERE clientno = p_clientno;
+  DELETE FROM DH_CLIENT WHERE clientno = p_clientno;
   COMMIT;
 END;
 /
+
+SELECT a.table_name,
+       a.constraint_name,
+       c.owner || '.' || c.r_constraint_name AS parent_fk
+FROM user_constraints a
+JOIN user_constraints c
+  ON a.r_constraint_name = c.constraint_name
+WHERE c.table_name = 'DH_CLIENT'
+  AND c.constraint_type = 'P';
