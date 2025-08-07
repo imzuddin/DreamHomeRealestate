@@ -1,16 +1,16 @@
-from fastapi import APIRouter, HTTPException, Request, status
-from pydantic import BaseModel 
-from utils.database import DataBaseManager
+import logging
+from datetime import date
 from typing import List
-import logging 
-from datetime import date 
+
+from fastapi import APIRouter, HTTPException, Request, status
+from pydantic import BaseModel
+from utils.database import DataBaseManager
 
 logger = logging.getLogger("api.client")
 db_manager = DataBaseManager(logger)
 
-router = APIRouter(
-    prefix="/clients"
-)
+router = APIRouter(prefix="/clients")
+
 
 class NewClient(BaseModel):
     clientno: str
@@ -22,6 +22,7 @@ class NewClient(BaseModel):
     email: str
     preftype: str
     maxrent: float
+
 
 @router.post("/new_client", status_code=status.HTTP_201_CREATED)
 async def register_client(client: NewClient):
@@ -40,10 +41,12 @@ async def register_client(client: NewClient):
     db_manager.call_procedure("client_registration_sp", args)
     return {"message": f"{client.fname} {client.lname} registered as client"}
 
+
 @router.delete("/delete_client/{clientno}")
 async def delete_client(clientno: str):
     db_manager.call_procedure("delete_client_sp", [clientno])
     return {"message": f"Deleted client with id: {clientno}"}
+
 
 @router.get("/get_clients", response_model=List[NewClient])
 async def list_clients():
@@ -66,5 +69,6 @@ async def list_clients():
             email=row[6],
             preftype=row[7],
             maxrent=row[8],
-        ) for row in rows
+        )
+        for row in rows
     ]
