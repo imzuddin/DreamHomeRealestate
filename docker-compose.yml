@@ -32,18 +32,19 @@ services:
       - ./api/run.sh:/run.sh 
     command: ["/run.sh"]
 
-  # ui:
-  #   build:
-  #     context: ./ui 
-  #     dockerfile: Dockerfile 
-  #   container_name: dreamhome_ui
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - api
-  #   volumes:
-  #     - ./ui:/app 
-  #   command: npm run dev
+  ui:
+    build:
+      context: ./ui 
+      dockerfile: Dockerfile 
+    container_name: dreamhome_ui
+    # network_mode: host
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./ui:/app 
+    command: npm run dev
 
 volumes:
   oracle_data:

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel 
-from typing import Optional
+from typing import Optional, List
 from utils.database import DataBaseManager
 import logging 
 
@@ -8,7 +8,7 @@ logger = logging.getLogger("api.branch")
 db_manager = DataBaseManager(logger)
 
 router = APIRouter(
-    prefix="/branch"
+    prefix="/branches"
 )
 
 class BranchCreate(BaseModel):
@@ -53,3 +53,22 @@ async def get_branch_address(branchno: str):
     if address == "Branch Not Found":
         raise HTTPException(status_code=404, detail="Branch Not Found")
     return {"address": address}
+
+@router.get("/get_branches", response_model=List[BranchCreate])
+async def list_branches():
+    sql = """
+        SELECT * FROM DH_BRANCH
+    """
+
+    with db_manager.cursor() as (cur, conn):
+        cur.execute(sql)
+        rows = cur.fetchall()
+
+    return [
+        BranchCreate(
+            branchno=row[0],
+            street=row[1],
+            city=row[2],
+            postcode=row[3]
+        ) for row in rows
+    ]
