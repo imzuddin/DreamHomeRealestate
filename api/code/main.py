@@ -1,11 +1,12 @@
-import os 
-from fastapi import FastAPI, Request, HTTPException 
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware 
-from routers import branch, client, staff, login
-from utils.database import DataBaseManager
-from dotenv import load_dotenv
 import logging
+import os
+
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from routers import branch, client, login, staff
+from utils.database import DataBaseManager
 
 load_dotenv()
 logging.basicConfig(
@@ -13,10 +14,7 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
 )
 
-app = FastAPI(
-    title="Dream Home Realestate API",
-    version=os.getenv("VERSION", "0.1.0")
-)
+app = FastAPI(title="Dream Home Realestate API", version=os.getenv("VERSION", "0.1.0"))
 logger = logging.getLogger("api.main")
 db_manager = DataBaseManager(logger)
 
@@ -33,12 +31,14 @@ app.include_router(client.router)
 app.include_router(staff.router)
 app.include_router(login.router)
 
+
 @app.on_event("startup")
 async def startup_event():
     db_manager.init_users_table()
 
     logger.info(f"✅ API Started")
 
+
 @app.get("/health_endpoint", tags=["health"])
 def healthcheck():
-    return { "status": "ok" }
+    return {"status": "ok"}
