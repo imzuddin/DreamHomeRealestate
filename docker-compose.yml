@@ -45,7 +45,7 @@ services:
       - "3000:3000"
     depends_on:
       - api
-      - database
+      - oracle
     volumes:
       - ./ui:/app
     command: npm run dev
