@@ -32,7 +32,7 @@ export default function EditBranchModal({ open, onClose, branch }) {
   }, [branch, reset]);
 
   const onSubmit = async (data) => {
-    await updateStaff({ branchno: branch.branchno, ...data });
+    await updateBranch({ branchno: branch.branchno, ...data });
     if (!isError) {
       onClose();
     }

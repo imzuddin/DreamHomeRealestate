@@ -16,7 +16,12 @@ export default function BranchForm({ open, onClose }) {
   const [createBranch, { isLoading, isSuccess, isError }] =
     useCreateBranchMutation();
 
-  const { control, handleSubmit, reset } = useForm({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       branchno: '',
       street: '',
@@ -45,21 +50,33 @@ export default function BranchForm({ open, onClose }) {
         <form id="edit-branch-form" onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             {[
-              ['branchno', 'Branch ID'],
-              ['street', 'Street Address'],
-              ['city', 'City'],
-              ['postcode', 'Postal Code'],
-            ].map(([name, label]) => (
+              ['street', 'Street Address', { required: 'Field is required' }],
+              ['city', 'City', { required: 'Field is required' }],
+              [
+                'postcode',
+                'Postal Code',
+                {
+                  required: 'Field is required',
+                  pattern: {
+                    value: /^[A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d$/,
+                    message: 'Format A1A 1A1',
+                  },
+                },
+              ],
+            ].map(([name, label, rules]) => (
               <Grid item xs={12} sm={6} key={name}>
                 <Controller
                   name={name}
                   control={control}
+                  rules={rules}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       label={label}
                       fullWidth
                       size="small"
+                      error={!!errors[name]}
+                      helperText={errors[name]?.message}
                     />
                   )}
                 />

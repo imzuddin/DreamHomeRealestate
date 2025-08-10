@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Dialog,
@@ -9,22 +9,19 @@ import {
   TextField,
   Button,
   Typography,
+  MenuItem,
 } from '@mui/material';
-import { useHireStaffMutation } from './api/apiSlice';
-
-const generateStaffNo = () => {
-  const num = Math.floor(100000 + Math.random() * 900000);
-  return `S${num}`;
-};
+import { useGetBranchesQuery, useHireStaffMutation } from './api/apiSlice';
 
 export default function StaffForm({ open, onClose }) {
   const [hireStaff, { isLoading, isSuccess, isError }] = useHireStaffMutation();
+  const { data: branches = [], isLoading: branchesLoading } =
+    useGetBranchesQuery();
 
   const {
     control,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -53,7 +50,6 @@ export default function StaffForm({ open, onClose }) {
     await hireStaff({
       ...data,
       salary: parseFloat(data.salary),
-      staffno: generateStaffNo(),
     }).unwrap();
   };
 
@@ -63,29 +59,56 @@ export default function StaffForm({ open, onClose }) {
       <DialogContent>
         <form id="hire-staff-form" onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-            <Controller
-              name="staffno"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => <input type="hidden" {...field} />}
-            />
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="branchno"
+                control={control}
+                rules={{ required: 'Branch is required' }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label="Branch No"
+                    fullWidth
+                    size="small"
+                    error={!!errors.branchno}
+                    helperText={errors.branchno?.message}
+                  >
+                    {branchesLoading ? (
+                      <MenuItem value="">
+                        <em>Loading…</em>
+                      </MenuItem>
+                    ) : (
+                      branches.map((b) => (
+                        <MenuItem key={b.branchno} value={b.branchno}>
+                          {b.branchno} — {b.street}, {b.city}
+                        </MenuItem>
+                      ))
+                    )}
+                  </TextField>
+                )}
+              />
+            </Grid>
             {[
-              ['fname', 'First Name', { reqiuired: 'Field is required' }],
-              ['lname', 'Last Name', { reqiuired: 'Field is required' }],
-              ['position', 'Position', { reqiuired: 'Field is required' }],
+              ['fname', 'First Name', { required: 'Field is required' }],
+              ['lname', 'Last Name', { required: 'Field is required' }],
+              ['position', 'Position', { required: 'Field is required' }],
               [
                 'sex',
                 'Sex',
                 {
-                  reqiuired: 'Field is required',
-                  pattern: { value: /^(M|F)$/, message: 'Use ‘M’ or ‘F’' },
+                  required: 'Field is required',
+                  pattern: {
+                    value: /^(M|F|NB)$/,
+                    message: 'Use "M" or "F" or "NB"',
+                  },
                 },
               ],
               [
                 'dob',
                 'DOB (YYYY-MM-DD)',
                 {
-                  reqiuired: 'Field is required',
+                  required: 'Field is required',
                   pattern: {
                     value: /^\d{4}-\d{2}-\d{2}$/,
                     message: 'Use YYYY-MM-DD',
@@ -96,14 +119,33 @@ export default function StaffForm({ open, onClose }) {
                 'salary',
                 'Salary',
                 {
-                  reqiuired: 'Field is required',
+                  required: 'Field is required',
                   min: { value: 0, message: 'Salary must be non-negative' },
                 },
               ],
-              ['branchno', 'Branch No', { reqiuired: 'Field is required' }],
-              ['telephone', 'Telephone', { reqiuired: 'Field is required' }],
-              ['mobile', 'Mobile', { reqiuired: 'Field is required' }],
-              ['email', 'Email', { reqiuired: 'Field is required' }],
+              [
+                'telephone',
+                'Telephone',
+                {
+                  required: 'Field is required',
+                  pattern: {
+                    value: /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/,
+                    message: 'Use format 123-456-7890',
+                  },
+                },
+              ],
+              [
+                'mobile',
+                'Mobile',
+                {
+                  required: 'Field is required',
+                  pattern: {
+                    value: /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/,
+                    message: 'Use format 123-456-7890',
+                  },
+                },
+              ],
+              ['email', 'Email', { required: 'Field is required' }],
             ].map(([name, label, rules]) => (
               <Grid item xs={12} sm={6} key={name}>
                 <Controller

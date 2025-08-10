@@ -1,6 +1,7 @@
 import logging
+import uuid
 from datetime import date
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel
@@ -13,7 +14,7 @@ router = APIRouter(prefix="/clients")
 
 
 class NewClient(BaseModel):
-    clientno: str
+    clientno: Optional[str]
     fname: str
     lname: str
     telno: str
@@ -26,8 +27,9 @@ class NewClient(BaseModel):
 
 @router.post("/new_client", status_code=status.HTTP_201_CREATED)
 async def register_client(client: NewClient):
+    clientno = f"CR{uuid.uuid1()}"
     args = [
-        client.clientno,
+        clientno,
         client.fname,
         client.lname,
         client.telno,

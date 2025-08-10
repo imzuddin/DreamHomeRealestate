@@ -10,11 +10,11 @@ PORT="1521"
 pip install -r "requirements.txt"
 
 echo "⏳ Waiting for Oracle listener on ${HOST}:${PORT}…"
-sleep 10
+sleep 20
 
 until nc -zv "$HOST" "$PORT" >/dev/null 2>&1; do
   echo "⏳ ${HOST}:${PORT} not reachable—sleeping 10s…"
-  sleep 10
+  sleep 20
 done
 
 echo "✅ Oracle listener is up on ${HOST}:${PORT}"

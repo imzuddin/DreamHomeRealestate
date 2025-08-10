@@ -1,4 +1,5 @@
 import logging
+import uuid
 from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException, Request, status
@@ -12,7 +13,7 @@ router = APIRouter(prefix="/branches")
 
 
 class BranchCreate(BaseModel):
-    branchno: str
+    branchno: Optional[str]
     street: str
     city: str
     postcode: str
@@ -20,13 +21,15 @@ class BranchCreate(BaseModel):
 
 class BranchUpdate(BaseModel):
     street: Optional[str] = None
-    ciy: Optional[str] = None
+    city: Optional[str] = None
     postcode: Optional[str] = None
 
 
 @router.post("/create_branch", status_code=status.HTTP_201_CREATED)
 async def create_branch(branch: BranchCreate):
-    args = [branch.branchno, branch.street, branch.city, branch.postcode]
+    branchno = f"B{uuid.uuid1()}"
+
+    args = [branchno, branch.street, branch.city, branch.postcode]
 
     db_manager.call_procedure("new_branch", args)
     return {"message": "Branch Created"}

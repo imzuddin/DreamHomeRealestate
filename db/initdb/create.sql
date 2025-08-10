@@ -18,6 +18,10 @@ drop table DH_REGISTRATION cascade constraint;
 
 */
 
+WHENEVER SQLERROR EXIT SQL.SQLCODE
+ALTER SESSION SET CONTAINER=FREEPDB1;
+ALTER SESSION SET CURRENT_SCHEMA=ADMIN;
+
 create  table DH_Branch
 (Branchno varchar2(50)  ,
  street varchar2(50),

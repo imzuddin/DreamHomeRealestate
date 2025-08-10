@@ -16,7 +16,12 @@ export default function ClientForm({ open, onClose }) {
   const [addClient, { isLoading, isSuccess, isError }] =
     useRegisterClientMutation();
 
-  const { control, handleSubmit, reset } = useForm({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       clientno: '',
       fname: '',
@@ -26,7 +31,7 @@ export default function ClientForm({ open, onClose }) {
       city: '',
       email: '',
       preftype: '',
-      maxrent: '',
+      maxrent: 0,
     },
   });
 
@@ -50,26 +55,49 @@ export default function ClientForm({ open, onClose }) {
         <form id="add-client-form" onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             {[
-              ['clientno', 'Client No'],
-              ['fname', 'First Name'],
-              ['lname', 'Last Name'],
-              ['telno', 'Telephone Number'],
-              ['street', 'Street Address'],
-              ['city', 'City'],
-              ['email', 'Email'],
-              ['preftype', 'Housing Preference'],
-              ['maxrent', 'Maximum Rent'],
-            ].map(([name, label]) => (
+              ['fname', 'First Name', { required: 'Field is required' }],
+              ['lname', 'Last Name', { required: 'Field is required' }],
+              [
+                'telno',
+                'Telephone Number',
+                {
+                  required: 'Field is required',
+                  pattern: {
+                    value: /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/,
+                    message: 'Use format 123-456-7890',
+                  },
+                },
+              ],
+              ['street', 'Street Address', { required: 'Field is required' }],
+              ['city', 'City', { required: 'Field is required' }],
+              ['email', 'Email', { required: 'Field is required' }],
+              [
+                'preftype',
+                'Housing Preference',
+                { required: 'Field is required' },
+              ],
+              [
+                'maxrent',
+                'Maximum Rent',
+                {
+                  required: 'Field is required',
+                  min: { value: 0, message: 'Salary must be non-negative' },
+                },
+              ],
+            ].map(([name, label, rules]) => (
               <Grid item xs={12} sm={6} key={name}>
                 <Controller
                   name={name}
                   control={control}
+                  rules={rules}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       label={label}
                       fullWidth
                       size="small"
+                      error={!!errors[name]}
+                      helperText={errors[name]?.message}
                     />
                   )}
                 />
