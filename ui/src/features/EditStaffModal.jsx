@@ -34,7 +34,8 @@ export default function EditStaffModal({ open, onClose, staff }) {
   }, [staff, reset]);
 
   const onSubmit = async (data) => {
-    await updateStaff({ staffNo: staff.staffNo, ...data });
+    console.log(staff);
+    await updateStaff({ staffNo: staff.staffno, ...data });
     if (!isError) {
       onClose();
     }

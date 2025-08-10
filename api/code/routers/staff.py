@@ -1,4 +1,5 @@
 import logging
+import uuid
 from datetime import date
 from typing import List, Optional
 
@@ -14,7 +15,7 @@ router = APIRouter(prefix="/staff")
 
 
 class Staff(BaseModel):
-    staffno: str
+    staffno: Optional[str] = None
     fname: str
     lname: str
     position: str
@@ -37,9 +38,18 @@ class StaffUpdate(BaseModel):
 @router.post("/hire", status_code=status.HTTP_201_CREATED)
 async def hire_staff(payload: Staff, request: Request):
     dob_date = date.fromisoformat(payload.dob)
+    staff_id = f"S{uuid.uuid1()}"
+
+    with db_manager.cursor() as (cur, conn):
+        cur.execute("SELECT 1 FROM DH_BRANCH WHERE Branchno = :1", [payload.branchno])
+        if cur.fetchone() is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Branch {payload.branchno!r} does not exist",
+            )
 
     args = [
-        payload.staffno,
+        str(staff_id),
         payload.fname,
         payload.lname,
         payload.position,

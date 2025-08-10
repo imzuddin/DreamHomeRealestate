@@ -14,7 +14,6 @@ import {
   CardContent,
   Container,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { useGetStaffQuery } from '../features/api/apiSlice';
 import EditStaffModal from '../features/EditStaffModal';
 import StaffForm from '../features/StaffForm';
