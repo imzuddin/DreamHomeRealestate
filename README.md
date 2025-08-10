@@ -8,6 +8,16 @@ CCPS610 Assignment Two
 2. Docker Compose 
 3. Python
 
+# Development 
+
+This project relies on default formatting according to: 
+
+1. black - Python
+2. isort - Python Import s
+3. prettier - JSX 
+
+If you edit this project please run the relevant formatter before pushing to github 
+
 # How to Run 
 
 Project can be brought up by navigating to the project directory and running the following commands 
